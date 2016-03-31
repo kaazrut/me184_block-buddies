@@ -23,7 +23,7 @@ stream.seek(0)
 pil = Image.open(stream)
 
 #now create a reader for the stream
-scanner = zbar.ImageScanner()
+scanner = zbar.Proessor()
 
 #configure the reader
 scanner.parse_config('enable')
@@ -41,6 +41,6 @@ scanner.scan(image)
 # extract results
 for symbol in image:
     print 'decoded', symbol.type, 'symbol', '"%s"' % symbol.data
-
+    return symbol
 # clean up
 del(image)
