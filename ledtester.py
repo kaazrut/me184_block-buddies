@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
-LED = 20
+LED = 16
 
 GPIO.setup(LED, GPIO.OUT)
 
