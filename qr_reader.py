@@ -41,6 +41,8 @@ scanner.scan(image)
 # extract results
 for symbol in image:
     print 'decoded', symbol.type, 'symbol', '"%s"' % symbol.data
+    
+def qrdat:
     return symbol
 # clean up
 del(image)

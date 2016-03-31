@@ -7,3 +7,5 @@ Created on Wed Mar 30 20:34:02 2016
 
 import qr_reader
 
+qrdat = qr_reader.qrdat()
+
