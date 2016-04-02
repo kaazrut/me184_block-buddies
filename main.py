@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 import time
 import qr_reader
 import os
+import random
 
 #initialize I/Os
 GPIO.setmode(GPIO.BCM)
@@ -15,11 +16,18 @@ GPIO.setup(23,GPIO.OUT)
 GPIO.setup(21,GPIO.OUT)
 
 #create variables and lists
-colorSelect = ["blue", "yellow", "orange", "purple"]
-colorList = []
+colorSelect = ("blue", "yellow", "orange", "purple")
+colorList = random.sample(colorSelect, 3)
 scannedList = []
 
+colorKey = {'blue': {'mp3': 'blue.mp3', 'ledR': 0, 'ledG': 0, 'ledB': 1},
+            'yellow': {'mp3': 'yellow.mp3', 'valR': 1, 'valG': 1, 'valB': 0},
+            'orange': {'mp3': 'orange.mp3', 'valR': 1, 'valG': 0.5, 'valB': 0},
+            'purple': {'mp3': 'purple.mp3', 'valR': 1, 'valG': 0, 'valB': 1}
+            }
+
 #at startup, run greeting
+SOUND_PATH = os.path.join("audio", "mp3")
 os.system('mpg123 -q .\audio\mp3\IntroHello.mp3 &')
 wait(3)
 
@@ -29,7 +37,16 @@ os.system('mpg123 -q .\audio\mp3\NeedHelp.mp3 &')
 wait(1)
 
 #insert the three random colors
-#TODO figure out how to randomize that list
+#TODO while loop
+#for x in colorList:
+#   mp3Select = colorKey[x]['mp3']
+#   ledR = colorKey[x]['valR']
+#   ledG = colorKey[x]['valG']
+#   ledB = colorKey[x]['valB']
+
+#play sound
+#wait
+#repeat
 os.system('mpg123 -q .\audio\mp3\blue.mp3 &')
 wait(1)
 os.system('mpg123 -q .\audio\mp3\yellow.mp3 &')
@@ -44,6 +61,13 @@ os.system('mpg123 -q .\audio\mp3\CanOrderBlocks.mp3 &')
 #start checking for qr codes and then append them to a list
 qrcode = qr_reader.qrdat()
 scannedList.append(qrcode)
+
+if colorList == scannedList:
+    #play correct
+    pass
+else:
+    #play inccorect, let them retry all qr code scanning
+    pass
 
 ledcheck = 1
 
