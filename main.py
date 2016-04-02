@@ -47,12 +47,12 @@ colorKey = {'blue': {'mp3': 'blue.mp3', 'valR': 0, 'rPul': 0, 'valG': 0, \
 
 #at startup, run greeting
 SOUND_PATH = os.path.join("audio", "mp3")
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &')
+os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
 time.sleep(3)
 
 #Throw everything into a while loop
 
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &')
+os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
 time.sleep(1)
 
 #in loop, for each color selected, light the led and say the color
@@ -74,7 +74,7 @@ for x in colorList:
    
 
 #finish list
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &')
+os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
 
 
 #start checking for qr codes and then append them to a list
