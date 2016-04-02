@@ -29,30 +29,33 @@ colorKey = {'blue': {'mp3': 'blue.mp3', 'ledR': 0, 'ledG': 0, 'ledB': 1},
 #at startup, run greeting
 SOUND_PATH = os.path.join("audio", "mp3")
 os.system('mpg123 -q .\audio\mp3\IntroHello.mp3 &')
-wait(3)
+time.sleep(3)
 
 #Throw everything into a while loop
 
 os.system('mpg123 -q .\audio\mp3\NeedHelp.mp3 &')
-wait(1)
+time.sleep(1)
 
 #insert the three random colors
 #TODO while loop
 #for x in colorList:
-#   mp3Select = colorKey[x]['mp3']
-#   ledR = colorKey[x]['valR']
-#   ledG = colorKey[x]['valG']
-#   ledB = colorKey[x]['valB']
+   mp3Sel = colorKey[x]['mp3']
+   cmd = 'mpg123 -q .' + SOUND_PATH + mp3Sel'
+   ledR = colorKey[x]['valR']
+   ledG = colorKey[x]['valG']
+   ledB = colorKey[x]['valB']
+   os.system(cmd)
+   time.sleep(2)
 
 #play sound
 #wait
 #repeat
-os.system('mpg123 -q .\audio\mp3\blue.mp3 &')
-wait(1)
-os.system('mpg123 -q .\audio\mp3\yellow.mp3 &')
-wait(1)
-os.system('mpg123 -q .\audio\mp3\yellow.mp3 &')
-wait(3)
+#os.system('mpg123 -q .\audio\mp3\blue.mp3 &')
+#time.sleep(1)
+#os.system('mpg123 -q .\audio\mp3\yellow.mp3 &')
+#time.sleep(1)
+#os.system('mpg123 -q .\audio\mp3\yellow.mp3 &')
+#time.sleep(3)
 
 #finish list
 os.system('mpg123 -q .\audio\mp3\CanOrderBlocks.mp3 &')
@@ -81,7 +84,7 @@ else:
     GPIO.output(23,GPIO.HIGH)
     GPIO.output(21,GPIO.LOW)
     
-wait(10)
+time.sleep(10)
 GPIO.output(23,GPIO.LOW)
 GPIO.output(21,GPIO.HIGH)    
 
