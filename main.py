@@ -15,11 +15,16 @@ blueLED = 18
 redLED = 21
 greenLED = 23
 
+correctLED = 16
+wrongLED = 12
+
 #initialize I/Os
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(blueLED, GPIO.OUT)
 GPIO.setup(redLED,GPIO.OUT)
 GPIO.setup(greenLED,GPIO.OUT)
+GPIO.setup(correctLED, GPIO.OUT)
+GPIO.setup(wrongLED, GPIO.OUT)
 
 #init pwm
 redPWM = GPIO.PWM(redLED, 50)
@@ -48,17 +53,17 @@ colorKey = {'blue': {'mp3': 'blue.mp3', 'valR': 0, 'rPul': 0, 'valG': 0, \
 #at startup, run greeting
 SOUND_PATH = os.path.join("audio", "mp3")
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
-time.sleep(3)
+time.sleep(10)
 
 #Throw everything into a while loop
 
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
-time.sleep(1)
+time.sleep(5)
 
 #in loop, for each color selected, light the led and say the color
 for x in colorList:
    mp3Sel = colorKey[x]['mp3']
-   cmd = 'mpg123 -q .' + os.path.join(SOUND_PATH, mp3Sel)
+   cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
    redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
    GPIO.output(redLED, colorKey[x]['valR'])
    greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
@@ -66,11 +71,11 @@ for x in colorList:
    bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
    GPIO.output(blueLED, colorKey[x]['valB']) 
    os.system(cmd)
-   time.sleep(2)
+   time.sleep(5)
    GPIO.output(redLED, 1)
    GPIO.output(greenLED, 1)
    GPIO.output(blueLED, 1)
-   time.sleep(1)
+   time.sleep(2)
    
 
 #finish list
@@ -78,29 +83,37 @@ os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
 
 
 #start checking for qr codes and then append them to a list
-qrcode = qr_reader.qrdat()
-scannedList.append(qrcode)
+def qrscan():
+    for x in colorList:
+        qrcode = qr_reader.qrdat()
+        scannedList.append(qrcode)
 
 if colorList == scannedList:
     #play correct
+    GPIO.output(correctLED, 0)
+    GPIO.output(wrongLED, 1)
     pass
 else:
-    #play inccorect, let them retry all qr code scanning
+    #play incorrect, let them retry all qr code scanning
+    GPIO.output(wrongLED, 0)
+    GPIO.output(correctLED, 1)
+    scannedList = []
+    qrscan()
     pass
 
-ledcheck = 1
-
-testcolor = "blue"
-
-if testcolor == qrcode:
-    GPIO.output(23,GPIO.LOW)
-    GPIO.output(21,GPIO.HIGH)
-    
-else:
-    GPIO.output(23,GPIO.HIGH)
-    GPIO.output(21,GPIO.LOW)
-    
-time.sleep(10)
-GPIO.output(23,GPIO.LOW)
-GPIO.output(21,GPIO.HIGH)    
+#ledcheck = 1
+#
+#testcolor = "blue"
+#
+#if testcolor == qrcode:
+#    GPIO.output(23,GPIO.LOW)
+#    GPIO.output(21,GPIO.HIGH)
+#    
+#else:
+#    GPIO.output(23,GPIO.HIGH)
+#    GPIO.output(21,GPIO.LOW)
+#    
+#time.sleep(10)
+#GPIO.output(23,GPIO.LOW)
+#GPIO.output(21,GPIO.HIGH)    
 
