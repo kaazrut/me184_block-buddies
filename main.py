@@ -21,6 +21,7 @@ testcolor = "blue"
 if testcolor == qrcode:
     GPIO.output(23,GPIO.LOW)
     GPIO.output(21,GPIO.HIGH)
+    
 else:
     GPIO.output(23,GPIO.HIGH)
     GPIO.output(21,GPIO.LOW)
