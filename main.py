@@ -38,7 +38,7 @@ time.sleep(1)
 
 #insert the three random colors
 #TODO while loop
-#for x in colorList:
+for x in colorList:
    mp3Sel = colorKey[x]['mp3']
    cmd = 'mpg123 -q .' + SOUND_PATH + mp3Sel'
    ledR = colorKey[x]['valR']
