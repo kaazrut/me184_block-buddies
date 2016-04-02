@@ -45,7 +45,7 @@ def qrdat():
         #if find a barcode   
         # extract results
         for symbol in image:
-            os.system('mpg123 -q .\audio\mp3\Electronic_Chime-KevanGC.mp3 &')
+            os.system('mpg123 -q ./audio/mp3/Electronic_Chime-KevanGC.mp3 &')
             print('decoded', symbol.type, 'symbol', '"%s"' % symbol.data)
         
         # clean up
