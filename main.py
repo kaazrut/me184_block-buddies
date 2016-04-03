@@ -92,7 +92,7 @@ os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
 time.sleep(10)
 
 #Throw everything into a while loop from this point
-while reset == False
+while reset is False
     gametime()
 
 def gametime():
@@ -147,7 +147,7 @@ def gametime():
 
 def runagain():
     #from the wiring, if resetPin is not pushed, the value is false
-    while resetPin == False: 
+    while resetPin is False: 
         pass
     else:
         reset = True
