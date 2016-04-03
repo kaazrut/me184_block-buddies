@@ -89,13 +89,13 @@ SOUND_PATH = os.path.join('audio', 'mp3')
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
 time.sleep(10)
 
-def runagain():
-    #from the wiring, if resetPin is not pushed, the value is false
-    while resetPin: 
-        pass
-    else:
-        endnow = False
-        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+# def runagain():
+#     #from the wiring, if resetPin is not pushed, the value is false
+#     while resetPin: 
+#         pass
+#     else:
+#         endnow = False
+#         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
 
 def gametime():
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
@@ -135,10 +135,10 @@ def gametime():
         GPIO.output(wrongLED, 1)
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
         time.sleep(8)
-        now = time.time()
-        while (GPIO.INPUT(resetPin) == 1 and time.time()-now < timeout):
-            time.sleep(0.1)
-            runagain()
+        # now = time.time()
+        # while (GPIO.INPUT(resetPin) == 1 and time.time()-now < timeout):
+        #     time.sleep(0.1)
+        #     runagain()
     else:
         #play incorrect, let them retry all qr code scanning
         GPIO.output(wrongLED, 0)
@@ -148,6 +148,7 @@ def gametime():
         scannedList = []
         qrscan()
 
+gametime()
 #Throw everything into a while loop from this point
-while endnow: 
-    gametime()
+# while endnow: 
+#     gametime()
