@@ -43,7 +43,7 @@ def qrdat():
         scanner.scan(image)
            
         #if find a barcode   
-        # extract results
+        # extract results, play ding when found a valid qr code
         for symbol in image:
             os.system('mpg123 -q ./audio/mp3/Electronic_Chime-KevanGC.mp3 &')
             print('decoded', symbol.type, 'symbol', '"%s"' % symbol.data)

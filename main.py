@@ -146,9 +146,9 @@ def gametime():
         qrscan()
 
 def runagain():
-    #from the wiring, if resetPin is not pushed, the value is true
-    if resetPin == True: 
+    #from the wiring, if resetPin is not pushed, the value is false
+    while resetPin == False: 
+        pass
+    else:
         reset = 1;
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
-    else
-        pass

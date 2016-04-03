@@ -1,0 +1,12 @@
+SETUP INSTRUCTIONS FOR RASPBERRY PI 3
+
+This uses the Pi Camera and GPIO pins on a RPi 3, running Raspbian Jessie.
+
+
+
+
+With the bash script launcher.sh active, this should just run.
+
+If not, run
+> python main.py
+
