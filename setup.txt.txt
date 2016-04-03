@@ -2,8 +2,24 @@ SETUP INSTRUCTIONS FOR RASPBERRY PI 3
 
 This uses the Pi Camera and GPIO pins on a RPi 3, running Raspbian Jessie.
 
+For setup, the following need to be installed:
 
-
+> sudo apt-get update
+> sudo apt-get upgrade
+> sudo apt-get install git
+> git clone http://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code.git
+> git clone https://github.com/kaazrut/me184_block-buddies.git
+> sudo apt-get install python-dev
+> sudo apt-get install python-rpi.gpio
+> sudo apt-get install alsa-utils mpg123
+> sudo apt-get install python3-picamera
+> sudo apt-get install python3-rpi.gpio
+> sudo apt-get install python3-pip
+> sudo apt-get libzbar-dev
+> sudo pip-3.2 install zbar
+> sudo apt-get install bluetooth bluez blueman
+> sudo apt-get update
+> sudo reboot
 
 With the bash script launcher.sh active, this should just run.
 
