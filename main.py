@@ -44,7 +44,7 @@ colorList = random.sample(colorSelect, 3)
 scannedList = []
 endnow = True
 timeout = 10
-t = Timer(timeout)
+t = thread.Timer(timeout, runagain)
 
 #for led color, 0 = on, 1 = off (this is due to wiring for GPIO)
 colorKey = {
@@ -92,7 +92,7 @@ os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
 time.sleep(10)
 
 #Throw everything into a while loop from this point
-while reset is False
+while endnow: 
     gametime()
 
 def gametime():
@@ -134,8 +134,6 @@ def gametime():
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
         time.sleep(8)
         t.start()
-        runagain()
-        t.cancel()
     else:
         #play incorrect, let them retry all qr code scanning
         GPIO.output(wrongLED, 0)
@@ -150,5 +148,5 @@ def runagain():
     while resetPin: 
         pass
     else:
-        reset = False
+        endnow = False
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
