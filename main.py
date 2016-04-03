@@ -9,7 +9,6 @@ import time
 import qr_reader
 import os
 import random
-from threading import Thread
 
 
 blueLED = 18
@@ -44,7 +43,6 @@ colorList = random.sample(colorSelect, 3)
 scannedList = []
 endnow = True
 timeout = 10
-t = thread.Timer(timeout, runagain)
 
 #for led color, 0 = on, 1 = off (this is due to wiring for GPIO)
 colorKey = {
@@ -133,7 +131,10 @@ def gametime():
         GPIO.output(wrongLED, 1)
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
         time.sleep(8)
-        t.start()
+        now = time.time()
+        while (GPIO.INPUT(resetPin) == 1 and time.time()-now < timeout):
+            time.sleep(0.1)
+            runagain()
     else:
         #play incorrect, let them retry all qr code scanning
         GPIO.output(wrongLED, 0)
