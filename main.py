@@ -127,8 +127,6 @@ os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
 time.sleep(2)
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
 
-scannedList = []
-
 #start checking for qr codes and then append them to a list
 def qrscan():
     for x in colorList:
@@ -143,11 +141,11 @@ if colorList == scannedList:
     GPIO.output(wrongLED, 1)
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
     time.sleep(8)
-    if reset is None:
-        playagain = False
-        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
-    else:
-        pass
+    # if reset is None:
+    #     playagain = False
+    #     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+    # else:
+    #     pass
 
 else:
     #play incorrect, let them retry all qr code scanning
