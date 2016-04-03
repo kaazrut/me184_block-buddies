@@ -127,6 +127,7 @@ def gametime():
     time.sleep(2)
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
 
+    scannedList = []
 
     #start checking for qr codes and then append them to a list
     def qrscan():
