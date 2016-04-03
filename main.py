@@ -20,6 +20,7 @@ wrongLED = 12
 resetPin = 14
 
 #initialize I/Os
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(blueLED, GPIO.OUT)
 GPIO.setup(redLED,GPIO.OUT)
@@ -111,7 +112,7 @@ for x in colorList:
     bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
     GPIO.output(blueLED, colorKey[x]['valB']) 
     os.system(cmd)
-    time.sleep(5)
+    time.sleep(3)
     GPIO.output(redLED, 1)
     GPIO.output(greenLED, 1)
     GPIO.output(blueLED, 1)
@@ -119,6 +120,8 @@ for x in colorList:
    
 
 #finish list
+os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
+time.sleep(2)
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
 
 
@@ -127,6 +130,8 @@ def qrscan():
     for x in colorList:
         qrcode = qr_reader.qrdat()
         scannedList.append(qrcode)
+
+qrscan()
 
 if colorList == scannedList:
     #play correct
