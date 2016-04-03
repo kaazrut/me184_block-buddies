@@ -89,9 +89,13 @@ SOUND_PATH = os.path.join('audio', 'mp3')
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
 time.sleep(10)
 
-#Throw everything into a while loop from this point
-while endnow: 
-    gametime()
+def runagain():
+    #from the wiring, if resetPin is not pushed, the value is false
+    while resetPin: 
+        pass
+    else:
+        endnow = False
+        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
 
 def gametime():
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
@@ -144,10 +148,6 @@ def gametime():
         scannedList = []
         qrscan()
 
-def runagain():
-    #from the wiring, if resetPin is not pushed, the value is false
-    while resetPin: 
-        pass
-    else:
-        endnow = False
-        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+#Throw everything into a while loop from this point
+while endnow: 
+    gametime()
