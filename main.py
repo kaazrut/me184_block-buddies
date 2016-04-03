@@ -42,7 +42,7 @@ bluePWM.start(0)
 colorSelect = ('blue', 'yellow', 'orange', 'purple')
 colorList = random.sample(colorSelect, 3)
 scannedList = []
-reset = False
+endnow = True
 timeout = 10
 t = Timer(timeout)
 
@@ -147,8 +147,8 @@ def gametime():
 
 def runagain():
     #from the wiring, if resetPin is not pushed, the value is false
-    while resetPin is False: 
+    while resetPin: 
         pass
     else:
-        reset = True
+        reset = False
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
