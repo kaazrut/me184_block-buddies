@@ -42,8 +42,10 @@ bluePWM.start(0)
 colorSelect = ('blue', 'yellow', 'orange', 'purple')
 colorList = random.sample(colorSelect, 3)
 scannedList = []
-endnow = True
-timeout = 10
+playagain = True
+t = 10000
+
+reset = GPIO.wait_for_edge(resetPin, GPIO.BOTH, timeout = t)
 
 #for led color, 0 = on, 1 = off (this is due to wiring for GPIO)
 colorKey = {
@@ -88,70 +90,73 @@ colorKey = {
 #at startup, run greeting
 SOUND_PATH = os.path.join('audio', 'mp3')
 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
-time.sleep(10)
+time.sleep(8)
 
 # def runagain():
 #     #from the wiring, if resetPin is not pushed, the value is false
 #     while resetPin: 
 #         pass
 #     else:
-#         endnow = False
+#         playagain = False
 #         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
 
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
-time.sleep(5)
+def gametime():
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
+    time.sleep(5)
 
-#in loop, for each color selected, light the led and say the color
-for x in colorList:
-    mp3Sel = colorKey[x]['mp3']
-    cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
-    redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
-    GPIO.output(redLED, colorKey[x]['valR'])
-    greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
-    GPIO.output(greenLED, colorKey[x]['valG'])
-    bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
-    GPIO.output(blueLED, colorKey[x]['valB']) 
-    os.system(cmd)
-    time.sleep(3)
-    GPIO.output(redLED, 1)
-    GPIO.output(greenLED, 1)
-    GPIO.output(blueLED, 1)
-    time.sleep(2)
-   
-
-#finish list
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
-time.sleep(2)
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
-
-
-#start checking for qr codes and then append them to a list
-def qrscan():
+    #in loop, for each color selected, light the led and say the color
     for x in colorList:
-        qrcode = qr_reader.qrdat()
-        scannedList.append(qrcode)
+        mp3Sel = colorKey[x]['mp3']
+        cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
+        redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
+        GPIO.output(redLED, colorKey[x]['valR'])
+        greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
+        GPIO.output(greenLED, colorKey[x]['valG'])
+        bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
+        GPIO.output(blueLED, colorKey[x]['valB']) 
+        os.system(cmd)
+        time.sleep(3)
+        GPIO.output(redLED, 1)
+        GPIO.output(greenLED, 1)
+        GPIO.output(blueLED, 1)
+        time.sleep(2)
+       
 
-qrscan()
-
-if colorList == scannedList:
-    #play correct
-    GPIO.output(correctLED, 0)
-    GPIO.output(wrongLED, 1)
-    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
-    time.sleep(8)
-    # now = time.time()
-    # while (GPIO.INPUT(resetPin) == 1 and time.time()-now < timeout):
-    #     time.sleep(0.1)
-    #     runagain()
-else:
-    #play incorrect, let them retry all qr code scanning
-    GPIO.output(wrongLED, 0)
-    GPIO.output(correctLED, 1)
-    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksWrong.mp3 &'))
+    #finish list
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
     time.sleep(2)
-    scannedList = []
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
+
+
+    #start checking for qr codes and then append them to a list
+    def qrscan():
+        for x in colorList:
+            qrcode = qr_reader.qrdat()
+            scannedList.append(qrcode)
+
     qrscan()
 
+    if colorList == scannedList:
+        #play correct
+        GPIO.output(correctLED, 0)
+        GPIO.output(wrongLED, 1)
+        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
+        time.sleep(8)
+        if reset is None:
+            playagain = False
+            os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+        else:
+            pass
+
+    else:
+        #play incorrect, let them retry all qr code scanning
+        GPIO.output(wrongLED, 0)
+        GPIO.output(correctLED, 1)
+        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksWrong.mp3 &'))
+        time.sleep(2)
+        scannedList = []
+        qrscan()
+
 #Throw everything into a while loop from this point
-# while endnow: 
-#     gametime()
+while playagain: 
+    gametime()
