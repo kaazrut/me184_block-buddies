@@ -152,15 +152,15 @@ def qrscan():
 
 scannedList = qrscan()
 
-check = False
+check = True
 
-while check is False
+while check is True
     if colorList == scannedList:
         #play correct
         GPIO.output(correctLED, 0)
         GPIO.output(wrongLED, 1)
         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
-        check = True
+        check = False
         time.sleep(8)
         # if reset is None:
         #     playagain = False
