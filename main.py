@@ -54,9 +54,6 @@ GPIO.output(pwrRGled, 1)
 
 #create variables and lists
 playagain = True
-t = 10000
-
-reset = GPIO.wait_for_edge(resetPin, GPIO.BOTH, timeout = t)
 
 #for led color, 0 = on, 1 = off (this is due to wiring for GPIO)
 colorKey = {
@@ -162,6 +159,7 @@ def gametime():
             os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
             check = False
             time.sleep(8)
+            reset = GPIO.wait_for_edge(resetPin, GPIO.BOTH, timeout = 10000)
             if reset is None:
                 playagain = False
                 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
