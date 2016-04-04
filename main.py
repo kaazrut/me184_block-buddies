@@ -11,13 +11,19 @@ import os
 import random
 
 
-blueLED = 18
 redLED = 21
-greenLED = 23
+greenLED = 20
+blueLED = 12
 
-correctLED = 16
-wrongLED = 12
+correctLED = 18 #green
+wrongLED = 23   #red 
+
+#restart game 
 resetPin = 14
+
+#power pins
+pwrRGBled = 16
+pwrRGled = 25
 
 #initialize I/Os
 GPIO.setwarnings(False)
@@ -27,6 +33,10 @@ GPIO.setup(redLED,GPIO.OUT)
 GPIO.setup(greenLED,GPIO.OUT)
 GPIO.setup(correctLED, GPIO.OUT)
 GPIO.setup(wrongLED, GPIO.OUT)
+
+GPIO.setup(pwrRGBled, GPIO.OUT)
+GPIO.setup(pwrRGled, GPIO.OUT)
+
 GPIO.setup(resetPin, GPIO.IN)
 
 #init pwm
@@ -37,6 +47,10 @@ bluePWM = GPIO.PWM(blueLED, 50)
 redPWM.start(0)
 greenPWM.start(0)
 bluePWM.start(0)
+
+#initialize power pins
+GPIO.output(pwrRGBled, 1)
+GPIO.output(pwrRGled, 1) 
 
 #create variables and lists
 colorSelect = ('blue', 'yellow', 'orange', 'purple')
