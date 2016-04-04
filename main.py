@@ -113,70 +113,66 @@ time.sleep(8)
 #         playagain = False
 #         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
 
-#def gametime():
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
-time.sleep(5)
+def gametime():
+    global playagain
 
-#in loop, for each color selected, light the led and say the color
-colorList = random.sample(colorSelect, 3)
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
+    time.sleep(5)
 
-for x in colorList:
-    mp3Sel = colorKey[x]['mp3']
-    cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
-    redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
-    GPIO.output(redLED, colorKey[x]['valR'])
-    greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
-    GPIO.output(greenLED, colorKey[x]['valG'])
-    bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
-    GPIO.output(blueLED, colorKey[x]['valB']) 
-    os.system(cmd)
-    time.sleep(3)
-    GPIO.output(redLED, 1)
-    GPIO.output(greenLED, 1)
-    GPIO.output(blueLED, 1)
-    time.sleep(2)
-   
+    #in loop, for each color selected, light the led and say the color
+    colorList = random.sample(colorSelect, 1)
 
-#finish list
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
-time.sleep(2)
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
-
-#start checking for qr codes and then append them to a list
-def qrscan():
-    scannedList = []
     for x in colorList:
-        qrcode = qr_reader.qrdat()
-        scannedList.append(qrcode)
-    return scannedList    
-
-scannedList = qrscan()
-
-check = True
-
-while check is True
-    if colorList == scannedList:
-        #play correct
-        GPIO.output(correctLED, 0)
-        GPIO.output(wrongLED, 1)
-        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
-        check = False
-        time.sleep(8)
-        # if reset is None:
-        #     playagain = False
-        #     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
-        # else:
-        #     pass
-
-    else:
-        #play incorrect, let them retry all qr code scanning
-        GPIO.output(wrongLED, 0)
-        GPIO.output(correctLED, 1)
-        os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksWrong.mp3 &'))
+        mp3Sel = colorKey[x]['mp3']
+        cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
+        redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
+        GPIO.output(redLED, colorKey[x]['valR'])
+        greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
+        GPIO.output(greenLED, colorKey[x]['valG'])
+        bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
+        GPIO.output(blueLED, colorKey[x]['valB']) 
+        os.system(cmd)
+        time.sleep(3)
+        GPIO.output(redLED, 1)
+        GPIO.output(greenLED, 1)
+        GPIO.output(blueLED, 1)
         time.sleep(2)
+       
+
+    #finish list
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
+    time.sleep(2)
+    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
+
+    #start checking for qr codes and then append them to a list
+    def qrscan():
         scannedList = []
-        qrscan()
+        for x in colorList:
+            qrcode = qr_reader.qrdat()
+            scannedList.append(qrcode)
+        return scannedList    
+
+    check = True
+
+    while check:
+        if colorList == qrscan():
+            #play correct
+            GPIO.output(correctLED, 0)
+            GPIO.output(wrongLED, 1)
+            os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
+            check = False
+            time.sleep(8)
+            if reset is None:
+                playagain = False
+                os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+
+        else:
+            #play incorrect, let them retry all qr code scanning
+            GPIO.output(wrongLED, 0)
+            GPIO.output(correctLED, 1)
+            os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksWrong.mp3 &'))
+            time.sleep(2)
 
 #Throw everything into a while loop from this point
-# while playagain: 
-#     gametime()
+while playagain: 
+    gametime()
