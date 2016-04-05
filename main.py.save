@@ -19,14 +19,13 @@ correctLED = 18 #green
 wrongLED = 23   #red 
 
 #restart game 
-resetPin = 24
+resetPin = 14
 
 #power pins
 pwrRGBled = 16
 pwrRGled = 25
 
 #initialize I/Os
-GPIO.cleanup()
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(blueLED, GPIO.OUT)
@@ -46,16 +45,15 @@ greenPWM = GPIO.PWM(greenLED, 50)
 bluePWM = GPIO.PWM(blueLED, 50)
 
 #duty cycle set to 0%
-redPWM.start(100)
-greenPWM.start(100)
-bluePWM.start(100)
+redPWM.start(0)
+greenPWM.start(0)
+bluePWM.start(0)
 
 #initialize power pins
 GPIO.output(pwrRGBled, GPIO.HIGH)
 GPIO.output(pwrRGled, GPIO.HIGH)
 
-GPIO.output([redLED, greenLED, blueLED], GPIO.LOW)
-GPIO.output([wrongLED, correctLED], GPIO.HIGH)
+GPIO.output([redLED, greenLED, blueLED], GPIO.HIGH)
 
 #create variables and lists
 playagain = True
@@ -64,39 +62,39 @@ playagain = True
 colorKey = {
     'blue': {
         'mp3': 'blue.mp3',
-        'valR': 0,
-        'rPul': 100,
-        'valG': 0,
-        'gPul': 100,
-        'valB': 1,
+        'valR': GPIO.HIGH,
+        'rPul': 0,
+        'valG': GPIO.HIGH,
+        'gPul': 0,
+        'valB': GPIO.LOW,
         'bPul': 0
     },
     'yellow': {
         'mp3': 'yellow.mp3',
         'valR': 1,
-        'rPul': 0,
+        'rPul': 100,
         'valG': 1,
-        'gPul': 50,
+        'gPul': 100,
         'valB': 0,
-        'bPul': 100
+        'bPul': 0
     },
     'orange': {
         'mp3': 'orange.mp3',
         'valR': 1,
-        'rPul': 0,
+        'rPul': 100,
         'valG': 1,
-        'gPul': 90,
+        'gPul': 50,
         'valB': 0,
-        'bPul': 100
+        'bPul': 0
     },
      'purple': {
         'mp3': 'purple.mp3',
         'valR': 1,
-        'rPul': 0,
+        'rPul': 100,
         'valG': 0,
-        'gPul': 100,
+        'gPul': 0,
         'valB': 1,
-        'bPul': 0
+        'bPul': 100
     }
 }
 
@@ -119,7 +117,7 @@ def gametime():
     global playagain
 
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
-    time.sleep(3)
+    time.sleep(4)
 
     #in loop, for each color selected, light the led and say the color
     colorList = random.sample(colorSelect, 3)
@@ -134,17 +132,14 @@ def gametime():
         bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
         GPIO.output(blueLED, colorKey[x]['valB']) 
         os.system(cmd)
-        time.sleep(2)
+        time.sleep(3)
         GPIO.output(redLED, 1)
         GPIO.output(greenLED, 1)
         GPIO.output(blueLED, 1)
-        time.sleep(1)
+        time.sleep(2)
        
 
     #finish list
-    redPWM.ChangeDutyCycle(100)
-    greenPWM.ChangeDutyCycle(100)
-    bluePWM.ChangeDutyCycle(100)
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
     time.sleep(2)
     os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
@@ -171,7 +166,6 @@ def gametime():
             if reset is None:
                 playagain = False
                 os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
-                GPIO.cleanup()
 
         else:
             #play incorrect, let them retry all qr code scanning
