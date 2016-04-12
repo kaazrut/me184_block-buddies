@@ -118,18 +118,13 @@ allright = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'AllBlocksRight.wav'))
 blockswrong = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'AllBlocksWrong.wav'))
 closeout = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'CloseOut.wav'))
 
-
 for x in colorKey:
-    colorKey[x]['load'] = pygame.mixer.Sound(SOUND_PATH, colorKey[x]['wav']
-
-
-
-channel = pygame.mixer.find_channel()
-channel.set_volume(0.9)
+    colorKey[x]['load'] = pygame.mixer.Sound(os.path.join(SOUND_PATH, colorKey[x]['wav']))
 
 #start sound
+channel = pygame.mixer.Channel(0)
 channel.queue(intro)
-
+channel.set_volume(1.0)
 
 def gametime():
     global playagain
