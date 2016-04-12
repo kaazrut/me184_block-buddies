@@ -9,6 +9,7 @@ import time
 import qr_reader
 import os
 import random
+import pygame
 
 
 redLED = 21
@@ -57,13 +58,17 @@ GPIO.output(pwrRGled, GPIO.HIGH)
 GPIO.output([redLED, greenLED, blueLED], GPIO.LOW)
 GPIO.output([wrongLED, correctLED], GPIO.HIGH)
 
+#initalize sound
+pygame.init()
+pygame.mixer.init()
+
 #create variables and lists
 playagain = True
 
 #for led color, 0 = on, 1 = off (this is due to wiring for GPIO)
 colorKey = {
     'blue': {
-        'mp3': 'blue.mp3',
+        'wav': 'blue.wav',
         'valR': 0,
         'rPul': 100,
         'valG': 0,
@@ -72,7 +77,7 @@ colorKey = {
         'bPul': 0
     },
     'yellow': {
-        'mp3': 'yellow.mp3',
+        'wav': 'yellow.wav',
         'valR': 1,
         'rPul': 0,
         'valG': 1,
@@ -81,7 +86,7 @@ colorKey = {
         'bPul': 100
     },
     'orange': {
-        'mp3': 'orange.mp3',
+        'wav': 'orange.wav',
         'valR': 1,
         'rPul': 0,
         'valG': 1,
@@ -90,7 +95,7 @@ colorKey = {
         'bPul': 100
     },
      'purple': {
-        'mp3': 'purple.mp3',
+        'wav': 'purple.wav',
         'valR': 1,
         'rPul': 0,
         'valG': 0,
@@ -102,39 +107,51 @@ colorKey = {
 
 colorSelect = tuple(colorKey.keys())
 
-#at startup, run greeting
-SOUND_PATH = os.path.join('audio', 'mp3')
-os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'IntroHello.mp3 &'))
-time.sleep(8)
+#at startup, load all sound files
+SOUND_PATH = os.path.join('audio', 'wav')
 
-# def runagain():
-#     #from the wiring, if resetPin is not pushed, the value is false
-#     while resetPin: 
-#         pass
-#     else:
-#         playagain = False
-#         os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+intro = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'IntroHello.wav'))
+needhelp = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'NeedHelp.wav'))
+tower = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'Tower.wav'))
+orderblocks = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'CanOrderBlocks.wav'))
+allright = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'AllBlocksRight.wav'))
+blockswrong = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'AllBlocksWrong.wav'))
+closeout = pygame.mixer.Sound(os.path.join(SOUND_PATH, 'CloseOut.wav'))
+
+
+for x in colorKey:
+    colorKey[x]['load'] = pygame.mixer.Sound(SOUND_PATH, colorKey[x]['wav']
+
+
+
+channel = pygame.mixer.find_channel()
+channel.set_volume(0.9)
+
+#start sound
+channel.queue(intro)
+
 
 def gametime():
     global playagain
+    
+    while channel.get_queue() or channel.get_busy():
+        time.sleep(0.1)
 
-    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'NeedHelp.mp3 &'))
-    time.sleep(3)
+    channel.queue(needhelp)
+    #pygame.mixer.Sound(os.path.join(SOUND_PATH, 'NeedHelp.wav &'))
+    #time.sleep(3)
 
     #in loop, for each color selected, light the led and say the color
     colorList = random.sample(colorSelect, 3)
 
     for x in colorList:
-        mp3Sel = colorKey[x]['mp3']
-        cmd = 'mpg123 -q ' + os.path.join(SOUND_PATH, mp3Sel)
+        channel.queue(colorKey[x]['load'])
         redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
         GPIO.output(redLED, colorKey[x]['valR'])
         greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
         GPIO.output(greenLED, colorKey[x]['valG'])
         bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
         GPIO.output(blueLED, colorKey[x]['valB']) 
-        os.system(cmd)
-        time.sleep(2)
         GPIO.output(redLED, 1)
         GPIO.output(greenLED, 1)
         GPIO.output(blueLED, 1)
@@ -145,9 +162,8 @@ def gametime():
     redPWM.ChangeDutyCycle(100)
     greenPWM.ChangeDutyCycle(100)
     bluePWM.ChangeDutyCycle(100)
-    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'Tower.mp3 &'))
-    time.sleep(2)
-    os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CanOrderBlocks.mp3 &'))
+    channel.queue(tower)
+    channel.queue(orderblocks)
 
     #start checking for qr codes and then append them to a list
     def qrscan():
@@ -164,20 +180,20 @@ def gametime():
             #play correct
             GPIO.output(correctLED, 0)
             GPIO.output(wrongLED, 1)
-            os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksRight.mp3 &'))
+            channel.queue(allright)
             check = False
-            time.sleep(8)
+            
             reset = GPIO.wait_for_edge(resetPin, GPIO.BOTH, timeout = 10000)
             if reset is None:
                 playagain = False
-                os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'CloseOut.mp3 &'))
+                channel.queue(closeout)
                 GPIO.cleanup()
 
         else:
             #play incorrect, let them retry all qr code scanning
             GPIO.output(wrongLED, 0)
             GPIO.output(correctLED, 1)
-            os.system('mpg123 -q ' + os.path.join(SOUND_PATH, 'AllBlocksWrong.mp3 &'))
+            channel.queue(blockswrong)
             time.sleep(2)
 
 #Throw everything into a while loop from this point
