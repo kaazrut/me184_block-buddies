@@ -141,6 +141,8 @@ def gametime():
 
     for x in colorList:
         channel.queue(colorKey[x]['load'])
+        while channel.get_queue() or channel.get_busy():
+            time.sleep(0.1)
         redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
         GPIO.output(redLED, colorKey[x]['valR'])
         greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
