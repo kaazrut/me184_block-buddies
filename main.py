@@ -154,6 +154,8 @@ def gametime():
         GPIO.output(blueLED, 1)
         time.sleep(1)
        
+    while channel.get_queue() or channel.get_busy():
+        time.sleep(0.1)
 
     #finish list
     redPWM.ChangeDutyCycle(100)
