@@ -12,9 +12,9 @@ import random
 import pygame
 
 
-redLED = 21
+redLED = 12
 greenLED = 20
-blueLED = 12
+blueLED = 21
 
 correctLED = 18 #green
 wrongLED = 23   #red 
@@ -139,23 +139,25 @@ def gametime():
     #in loop, for each color selected, light the led and say the color
     colorList = random.sample(colorSelect, 3)
 
-    for x in colorList:
-        channel.queue(colorKey[x]['load'])
-        while channel.get_queue() or channel.get_busy():
-            time.sleep(0.1)
-        redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
-        GPIO.output(redLED, colorKey[x]['valR'])
-        greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
-        GPIO.output(greenLED, colorKey[x]['valG'])
-        bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
-        GPIO.output(blueLED, colorKey[x]['valB']) 
-        GPIO.output(redLED, 1)
-        GPIO.output(greenLED, 1)
-        GPIO.output(blueLED, 1)
-        time.sleep(1)
-       
-    while channel.get_queue() or channel.get_busy():
-        time.sleep(0.1)
+    def colorcall():
+        for x in colorList:
+            channel.queue(colorKey[x]['load'])
+            while channel.get_queue() or channel.get_busy():
+                time.sleep(0.1)
+            redPWM.ChangeDutyCycle(colorKey[x]['rPul'])
+            GPIO.output(redLED, colorKey[x]['valR'])
+            greenPWM.ChangeDutyCycle(colorKey[x]['gPul'])
+            GPIO.output(greenLED, colorKey[x]['valG'])
+            bluePWM.ChangeDutyCycle(colorKey[x]['bPul'])
+            GPIO.output(blueLED, colorKey[x]['valB']) 
+            GPIO.output(redLED, 1)
+            GPIO.output(greenLED, 1)
+            GPIO.output(blueLED, 1)
+            time.sleep(1)
+
+    colorcall()        
+    #while channel.get_queue() or channel.get_busy():
+    #    time.sleep(0.1)
         
     time.sleep(0.1)
     #finish list
@@ -198,6 +200,7 @@ def gametime():
             GPIO.output(correctLED, 1)
             channel.queue(blockswrong)
             time.sleep(2)
+            colorcall()
 
 #Throw everything into a while loop from this point
 while playagain: 
