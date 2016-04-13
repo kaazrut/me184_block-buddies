@@ -12,29 +12,29 @@ import picamera
 from PIL import Image
 import zbar
 import pygame
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 
 def qrdat():
     pygame.init()
     pygame.mixer.init()
 
-    flashPin = 11
+    #flashPin = 11
 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(flashPin, GPIO.OUT)
+    #GPIO.setmode(GPIO.BCM)
+    #GPIO.setup(flashPin, GPIO.OUT)
 
     while True:
         symbol = None        
         #create stream in memory
         stream = io.BytesIO()
         with picamera.PiCamera() as camera:
-            GPIO.output(flashPin, 0)
+            #GPIO.output(flashPin, 0)
             camera.start_preview()
             time.sleep(2)
             camera.capture(stream, format='jpeg')
             
         #read content from stream
-        GPIO.output(flashPin, 1)
+        #GPIO.output(flashPin, 1)
         stream.seek(0)
         pil = Image.open(stream)
         
