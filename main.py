@@ -156,7 +156,8 @@ def gametime():
        
     while channel.get_queue() or channel.get_busy():
         time.sleep(0.1)
-
+        
+    time.sleep(0.1)
     #finish list
     redPWM.ChangeDutyCycle(100)
     greenPWM.ChangeDutyCycle(100)
@@ -164,6 +165,8 @@ def gametime():
     channel.queue(tower)
     channel.queue(orderblocks)
 
+    time.sleep(3)
+    
     #start checking for qr codes and then append them to a list
     def qrscan():
         scannedList = []
@@ -186,6 +189,7 @@ def gametime():
             if reset is None:
                 playagain = False
                 channel.queue(closeout)
+                time.sleep(5)
                 GPIO.cleanup()
 
         else:
