@@ -19,7 +19,7 @@ blueLED = 21
 correctLED = 18 #green
 wrongLED = 23   #red 
 
-flashLED = 11
+flashLED = 26
 
 #restart game 
 resetPin = 24
@@ -199,6 +199,7 @@ def gametime():
                 time.sleep(5)
                 GPIO.cleanup()
 
+            GPIO.output(correctLED, 1)
         else:
             #play incorrect, let them retry all qr code scanning
             GPIO.output(wrongLED, 0)
