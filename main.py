@@ -19,6 +19,8 @@ blueLED = 21
 correctLED = 18 #green
 wrongLED = 23   #red 
 
+flashLED = 11
+
 #restart game 
 resetPin = 24
 
@@ -35,6 +37,7 @@ GPIO.setup(redLED,GPIO.OUT)
 GPIO.setup(greenLED,GPIO.OUT)
 GPIO.setup(correctLED, GPIO.OUT)
 GPIO.setup(wrongLED, GPIO.OUT)
+GPIO.setup(flashLED, GPIO.OUT)
 
 GPIO.setup(pwrRGBled, GPIO.OUT)
 GPIO.setup(pwrRGled, GPIO.OUT)
@@ -173,8 +176,10 @@ def gametime():
     def qrscan():
         scannedList = []
         for x in colorList:
+            GPIO.output(flashLED, 0)
             qrcode = qr_reader.qrdat()
             scannedList.append(qrcode)
+            GPIO.output(flashLED, 1)
         return scannedList    
 
     check = True
@@ -188,7 +193,7 @@ def gametime():
             check = False
             
             reset = GPIO.wait_for_edge(resetPin, GPIO.BOTH, timeout = 10000)
-            if reset is None:
+            if reset is True:
                 playagain = False
                 channel.queue(closeout)
                 time.sleep(5)
